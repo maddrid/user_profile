@@ -115,8 +115,8 @@ $var = userProfileGetPreference('user_profile_route');
 
 
     osc_add_route('cris', 'cris', 'cris' , osc_plugin_folder('user_profile/index.php') . 'views/cris.php', false, 'custom', 'pub_profile', __('Profile Page Of ') );
-   
-if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('REQUEST_URI', false, false), '/oc-admin/') == false) {
+   if(strtoupper($_SERVER['REQUEST_METHOD']) === 'GET') {
+if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('REQUEST_URI', false, false), '/oc-admin/') === false) {
 
         $request_uri = preg_replace('@^' . REL_WEB_URL . '@', "", Params::getServerParam('REQUEST_URI', false, false));
         $pos = strpos($request_uri, $var . '-', 0);
@@ -146,6 +146,7 @@ $router->map('GET',"/{$var}-[a:username]/[i:itemsPerPage]/[i:iPage]", 'userProfi
         }
   //  }
 }
+   }
 //p_print_r(Rewrite::newInstance()->getRoutes());
 
 
