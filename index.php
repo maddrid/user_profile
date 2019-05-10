@@ -39,7 +39,7 @@ function user_profile_redirect() {
         Rewrite::newInstance()->set_location('error');
         header('HTTP/1.1 404 Not Found');
         osc_current_web_theme_path('404.php');
-        exit;
+        exit('No user');
     }
 
     $itemsPerPage = Params::getParam('itemsPerPage');
@@ -89,7 +89,7 @@ function user_profile_custom() {
                 Rewrite::newInstance()->set_location('error');
                 header('HTTP/1.1 404 Not Found');
                 osc_current_web_theme_path('404.php');
-                exit;
+                exit('wrong file');
             }
 
             // check if the file exists
@@ -97,6 +97,7 @@ function user_profile_custom() {
                 Rewrite::newInstance()->set_location('error');
                 header('HTTP/1.1 404 Not Found');
                 osc_current_web_theme_path('404.php');
+                 exit('file do not exist');
             }
 
 //            osc_run_hook('custom_controller');
@@ -114,11 +115,13 @@ osc_add_hook('init_custom', 'user_profile_custom');
 $var = userProfileGetPreference('user_profile_route');
 
 
-    osc_add_route('cris', 'cris', 'cris' , osc_plugin_folder('user_profile/index.php') . 'views/cris.php', false, 'custom', 'pub_profile', __('Profile Page Of ') );
-   
-if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('REQUEST_URI', false, false), '/oc-admin/') == false) {
+  //  osc_add_route('cris', 'cris', 'cris' , osc_plugin_folder('user_profile/index.php') . 'views/cris.php', false, 'custom', 'pub_profile', __('Profile Page Of ') );
+   if(strtoupper($_SERVER['REQUEST_METHOD']) === 'GET') {
+if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('REQUEST_URI', false, false), '/oc-admin/') === false) {
 
         $request_uri = preg_replace('@^' . REL_WEB_URL . '@', "", Params::getServerParam('REQUEST_URI', false, false));
+        p_print_r($request_uri);
+
         $pos = strpos($request_uri, $var . '-', 0);
 
         if ($pos !== false) {
@@ -129,9 +132,10 @@ if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('R
             $pathinfo = pathinfo(Params::getServerParam('SCRIPT_NAME', false, false));
 
 
-            $basePath = $pathinfo['dirname'];
+             $basePath = rtrim($pathinfo['dirname'],'/');
 
             $router = new \AltoRouter();
+            
             $router->setBasePath($basePath);
 
 
@@ -146,6 +150,7 @@ $router->map('GET',"/{$var}-[a:username]/[i:itemsPerPage]/[i:iPage]", 'userProfi
         }
   //  }
 }
+   }
 //p_print_r(Rewrite::newInstance()->getRoutes());
 
 
