@@ -23,7 +23,7 @@ function userProfileRoute($username, $ipp = 10, $page = 1) {
 
     $user = User::newInstance()->findByUsername($username);
 
-
+    
     if ($user) {
 
         if ($user['b_enabled'] !== '1' || $user['b_active'] !== '1') {

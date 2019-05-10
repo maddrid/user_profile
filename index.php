@@ -132,10 +132,11 @@ if (Params::existServerParam('REQUEST_URI') && stripos(Params::getServerParam('R
             $pathinfo = pathinfo(Params::getServerParam('SCRIPT_NAME', false, false));
 
 
-            $basePath = $pathinfo['dirname'];
-           // p_print_r($basePath);
+             $basePath = rtrim($pathinfo['dirname'],'/');
+
             $router = new \AltoRouter();
-            $router->setBasePath('');
+            
+            $router->setBasePath($basePath);
 
 
 $router->map('GET',"/{$var}-[a:username]", 'userProfile', 'users');
